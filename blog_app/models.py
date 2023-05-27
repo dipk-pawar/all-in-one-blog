@@ -21,7 +21,9 @@ STATUS_CHOICE = ((0, "Draft"), (1, "Published"))
 class Blog(models.Model):
     title = models.CharField(max_length=150)
     slug = models.SlugField(max_length=150, unique=True)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="blogs"
+    )
     author = models.ForeignKey(User, on_delete=models.CASCADE)
     featured_image = models.ImageField(upload_to="uploads/%Y/%m/%d")
     short_description = models.TextField(max_length=500)
