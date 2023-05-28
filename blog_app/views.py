@@ -10,6 +10,12 @@ class Home(View):
         return render(request, "home.html", context={"blogs": blogs})
 
 
+class GetPostBySlug(View):
+    def get(self, request, slug):
+        blog = Blog.objects.get(status="Published", slug=slug)
+        return render(request, "blog_post.html", context={"post": blog})
+
+
 class PostsByCategory(View):
     def get(self, request, id):
         try:
