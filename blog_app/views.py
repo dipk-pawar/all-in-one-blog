@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
 from django.views import View
-from blog_app.models import Category, Blog
+from blog_app.models import Category, Blog, About
 
 
 # Create your views here.
 class Home(View):
     def get(self, request):
         blogs = Blog.objects.filter(status="Published").order_by("-updated_at")
-        return render(request, "home.html", context={"blogs": blogs})
+        about = About.objects.last()
+        return render(request, "home.html", context={"blogs": blogs, "about": about})
 
 
 class GetPostBySlug(View):
