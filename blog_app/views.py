@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views import View
 from blog_app.models import Category, Blog, About
+from django.db.models import Q
 
 
 # Create your views here.
@@ -30,4 +31,23 @@ class PostsByCategory(View):
             request,
             "category_post.html",
             context={"category": category, "blogs": blogs},
+        )
+
+
+class SearchCategory(View):
+    def get(self, request):
+        searched_posts = []
+        keyword = request.GET.get("keyword")
+        if keyword and keyword.strip() != "":
+            searched_posts = Blog.objects.filter(
+                Q(title__icontains=keyword)
+                | Q(short_description__icontains=keyword)
+                | Q(blog_body__icontains=keyword)
+            )
+        else:
+            searched_posts = Blog.objects.all()
+        return render(
+            request,
+            "searched_posts.html",
+            context={"searched_posts": searched_posts, "keyword": keyword},
         )

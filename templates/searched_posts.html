@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block body_block %}
+<h3 class="text-uppercase text-warning" style="letter-spacing: 2px;">Searched Post for - {{keyword}}</h3>
+  <main role="main" class="container p-0">
+    <div class="row mb-2">
+      {% for post in searched_posts %}
+      <div class="col-md-6">
+        <div class="card border-0" >
+          <div class="card-body">
+            <h3><a href="{% url 'post_by_slug' post.slug %}" style="color:black">{{post.title}}</a></h3>
+            <small class="mb-1 text-muted">{{post.created_at | timesince}} ago by {{post.author}}</small>
+            <p class="card-text">{{post.short_description | truncatewords:20}}</p>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+  </main><!-- /.container -->
+{% endblock %}
