@@ -4,6 +4,7 @@
 <h3 class="text-uppercase text-warning" style="letter-spacing: 2px;">Searched Post for - {{keyword}}</h3>
   <main role="main" class="container p-0">
     <div class="row mb-2">
+    {% if searched_posts%}
       {% for post in searched_posts %}
       <div class="col-md-6">
         <div class="card border-0" >
@@ -15,6 +16,11 @@
         </div>
       </div>
       {% endfor %}
+      {% else %}
+      <div class="container">
+        <p>No post found</p>
+      </div>
+      {% endif %}
     </div>
 
   </main><!-- /.container -->

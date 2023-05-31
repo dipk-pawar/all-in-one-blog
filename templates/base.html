@@ -26,8 +26,13 @@
               </form>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-              <a class="btn btn-sm btn-warning" href="#">Login</a> &nbsp;
-              <a class="btn btn-sm btn-outline-secondary" href="#">Register</a>
+              {% if not user.is_authenticated %}
+                <a class="btn btn-sm btn-warning" href="#">Login</a> &nbsp;
+                <a class="btn btn-sm btn-outline-secondary" href="{% url 'register_user' %}">Register</a>
+              {% else %}
+              <span>Hey {{user}} welcome :) </span>
+              <a class="btn btn-sm btn-warning" href="#">Logout</a> &nbsp;
+              {% endif %}
             </div>
           </div>
         </header>
@@ -40,7 +45,7 @@
           </nav>
         </div>
     {% block body_block %}{% endblock %}
-<footer class="blog-footer">
+<footer class="blog-footer mt-2">
     <p>All in one blog built with ❤️ by <a href="#">Dipak Pawar</a></p>
 </footer>
 </body>
