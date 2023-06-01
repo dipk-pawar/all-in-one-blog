@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block body_block %}
+<div class="row">
+    <!--load the vertical sidebar here-->
+    {% include 'dashboard/sidebar.html' %}
+    <div class="col-md-9">
+        <div class="row">
+            <div class="col">
+                <div class="card border-default mb-3">
+                    <div class="card-header text-center test-uppercase font-weight-bold">All Categories</div>
+                        <div class="card-body text-dark">
+                            <h5 class="card-title text-center">{{total_tags}}</h5>
+                        </div>
+                </div>
+            </div>
+
+            <div class="col">
+                <div class="card border-default mb-3">
+                    <div class="card-header text-center test-uppercase font-weight-bold">All Posts</div>
+                        <div class="card-body text-dark">
+                            <h5 class="card-title text-center">{{total_posts}}</h5>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     "accounts",
     "crispy_forms",
     "crispy_bootstrap4",
+    "dashboard",
 ]
 
 MIDDLEWARE = [
@@ -140,3 +141,4 @@ CRISPY_TEMPLATE_PACK = "bootstrap4"
 MESSAGE_TAGS = {
     messages.ERROR: "danger",
 }
+LOGIN_URL = "/account/login"

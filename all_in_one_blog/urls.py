@@ -24,4 +24,5 @@ urlpatterns = [
     path("", Home.as_view(), name="home"),
     path("blog/", include("blog_app.urls")),
     path("account/", include("accounts.urls")),
+    path("dashboard/", include("dashboard.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
