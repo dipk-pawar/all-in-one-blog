@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block body_block %}
 {% load crispy_forms_tags %}
-<h3 class="text-center">Register User</h3>
-<form action="{% url 'register_user' %}" method="POST" style="width: 500px; margin: auto;">
+<h3 class="text-center">Login User</h3>
+<form action="{% url 'login_user' %}" method="POST" style="width: 500px; margin: auto;">
     {% csrf_token %}
     {% if messages %}
         {% for message in messages %}
