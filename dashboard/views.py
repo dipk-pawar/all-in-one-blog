@@ -4,8 +4,10 @@ from blog_app.models import Category, Blog
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import TemplateView
-from .forms import CategoryForm
+from .forms import CategoryForm, BlogForm
 from django.contrib import messages
+from django.template.defaultfilters import slugify
+import uuid
 
 
 # Create your views here..
@@ -46,6 +48,7 @@ class AddCategories(View):
             return redirect("add_category")
 
 
+@method_decorator(login_required, name="dispatch")
 class EditCategory(View):
     def get(self, request, pk):
         try:
@@ -73,6 +76,7 @@ class EditCategory(View):
             return redirect("edit_category", pk=pk)
 
 
+@method_decorator(login_required, name="dispatch")
 class DeleteCategory(View):
     def get(self, request, pk):
         try:
@@ -83,3 +87,97 @@ class DeleteCategory(View):
         except Exception:
             messages.error(request, "Sorry, category not found")
             return redirect("dashboard_categories")
+
+
+@method_decorator(login_required, name="dispatch")
+class DashboardPosts(TemplateView):
+    template_name = "dashboard/posts/dashboard_posts.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        posts = Blog.objects.all()
+        context["posts"] = posts
+        return context
+
+
+@method_decorator(login_required, name="dispatch")
+class DashboardAddPost(View):
+    def get(self, request):
+        form = BlogForm()
+        return render(request, "dashboard/posts/add_post.html", {"form": form})
+
+    def post(self, request):
+        form = BlogForm(request.POST, request.FILES)
+        if form.is_valid():
+            try:
+                return self.create_post_func(form, request)
+            except Exception:
+                messages.error(request, "Sorry, something went wrong")
+                return redirect("dashboard_add_post")
+        else:
+            messages.error(request, "Sorry, Something went wrong")
+            return redirect("dashboard_add_post")
+
+    def create_post_func(self, form, request):
+        title = form.cleaned_data["title"]
+        post = form.save(commit=False)
+        post.author = request.user
+        post.slug = f"{slugify(title)}-{str(uuid.uuid4())}"
+        post.save()
+        messages.success(request, "Blog post added successfully")
+        return redirect("dashboard_posts")
+
+
+@method_decorator(login_required, name="dispatch")
+class DashboardEditPost(View):
+    def get(self, request, pk):
+        try:
+            blog_post = Blog.objects.get(id=pk)
+            form = BlogForm(instance=blog_post)
+            return render(
+                request,
+                "dashboard/posts/edit_post.html",
+                {"form": form, "blog_post": blog_post},
+            )
+        except Exception:
+            messages.error(request, "Sorry, something went wrong")
+            return redirect("dashboard_posts")
+
+    def post(self, request, pk):
+        try:
+            blog_post = Blog.objects.get(id=pk)
+        except Exception:
+            messages.error(request, "Sorry, The post is not available")
+            return redirect("dashboard_posts")
+        form = BlogForm(request.POST, request.FILES, instance=blog_post)
+        if form.is_valid():
+            try:
+                return self.update_post_func(form, request)
+            except Exception:
+                messages.error(request, "Sorry, something went wrong")
+                return redirect("dashboard_add_post")
+        else:
+            messages.error(request, "Sorry, Something went wrong")
+            return redirect("dashboard_add_post")
+
+    def update_post_func(self, form, request):
+        title = form.cleaned_data["title"]
+        post = form.save(commit=False)
+        post.author = request.user
+        post.slug = f"{slugify(title)}-{str(uuid.uuid4())}"
+        post.save()
+        messages.success(request, "Blog post added successfully")
+        return redirect("dashboard_posts")
+
+
+@method_decorator(login_required, name="dispatch")
+class DeleteDashboardPost(View):
+    def get(self, request, pk):
+        try:
+            blog_post = Blog.objects.get(id=pk)
+            blog_post.delete()
+            messages.success(request, "Blog post deleted successfully")
+            return redirect("dashboard_posts")
+        except Exception:
+            messages.error(request, "Sorry, post not found")
+            return redirect("dashboard_posts")
