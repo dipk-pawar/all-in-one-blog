@@ -40,10 +40,9 @@ class UserLogin(View):
             try:
                 username = login_form.cleaned_data["username"]
                 password = login_form.cleaned_data["password"]
-                user = auth.authenticate(username=username, password=password)
-                if user:
+                if user := auth.authenticate(username=username, password=password):
                     auth.login(request, user)
-                    return redirect("home")
+                    return redirect("dashboard")
                 messages.error(request, "Sorry, Username or password is incorrect")
                 return redirect("login_user")
             except Exception:

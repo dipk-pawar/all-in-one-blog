@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block body_block %}
+<div class="row">
+    <!--load the vertical sidebar here-->
+    {% include 'dashboard/sidebar.html' %}
+    <div class="col-md-9">
+            <h2>All Categories</h2>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+              <strong>{{ message }}</strong>.
+            </div>
+            {% endfor %}
+            {% endif %}
+            <a href="{% url 'add_category' %}" class="btn btn-warning mb-2 float-right">Add Category</a>
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Created at</th>
+                    <th scope="col">Updated at</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for tag in tags %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{tag.name}}</td>
+                    <td>{{tag.created_at|date:"M d, Y"}}</td>
+                    <td>{{tag.updated_at|date:"M d, Y"}}</td>
+                    <td>
+                        <a href="{% url 'edit_category' tag.id %}"><i class="fa fa-edit text-success"></i></a>&nbsp;
+                        <a href="{% url 'delete_category' tag.id %}"><i class="fa fa-trash text-danger"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+    </div>
+</div>
+{% endblock %}
