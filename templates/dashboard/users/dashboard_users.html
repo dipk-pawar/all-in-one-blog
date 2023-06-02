@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block body_block %}
+<div class="row">
+    <!--load the vertical sidebar here-->
+    {% include 'dashboard/sidebar.html' %}
+    <div class="col-md-9">
+            <h2 style="text-align: center;">All Users</h2>
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+              <strong>{{ message }}</strong>.
+            </div>
+            {% endfor %}
+            {% endif %}
+            <a href="{% url 'add_dashboard_user' %}" class="btn btn-warning mb-2 float-right">Add User</a>
+            <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Fullname</th>
+                    <th scope="col">Username</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Is Active</th>
+                    <th scope="col">Is staff</th>
+                    <th scope="col">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for user in users %}
+                <tr>
+                    <th scope="row">{{forloop.counter}}</th>
+                    <td>{{user.first_name}} {{user.last_name}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.email}}</td>
+                    <td>{% if user.is_active %} <i class="fa fa-check text-success"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %}</td>
+                    <td>{% if user.is_staff %} <i class="fa fa-check text-success"></i>{% else %}<i class="fa fa-times text-danger"></i>{% endif %}</td>
+                    <td>
+                        <a href=""><i class="fa fa-edit text-success"></i></a>&nbsp;
+                        <a href=""><i class="fa fa-trash text-danger"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+    </div>
+</div>
+{% endblock %}

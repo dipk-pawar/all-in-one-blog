@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block body_block %}
+{% load crispy_forms_tags %}
+<div class="row">
+    <!--load the vertical sidebar here-->
+    {% include 'dashboard/sidebar.html' %}
+    <div class="col-md-9">
+        <h2 style="text-align: center;">Add User</h2>
+        <form action="{% url 'add_dashboard_user' %}" method="POST">
+            {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert alert-danger alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                <strong>{{ message }}</strong>.
+              </div>
+            {% endfor %}
+            {% endif %}
+            {% csrf_token %}
+            {{form | crispy}}
+            <button type="submit" class="btn btn-warning float-right">Add User</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -9,6 +9,9 @@ from .views import (
     DashboardAddPost,
     DashboardEditPost,
     DeleteDashboardPost,
+    DashboardUsers,
+    GetandCreateDashboardUser,
+    NoPermissionPage,
 )
 
 urlpatterns = [
@@ -23,4 +26,7 @@ urlpatterns = [
         "posts/edit/<int:pk>/", DashboardEditPost.as_view(), name="dashboard_edit_post"
     ),
     path("posts/delete/<int:pk>/", DeleteDashboardPost.as_view(), name="delete_post"),
+    path("users", DashboardUsers.as_view(), name="dashboard_users"),
+    path("users/add", GetandCreateDashboardUser.as_view(), name="add_dashboard_user"),
+    path("no-permission/", NoPermissionPage.as_view(), name="no_permission"),
 ]

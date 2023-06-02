@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block body_block %}
+<div class="row">
+    <!--load the vertical sidebar here-->
+    {% include 'dashboard/sidebar.html' %}
+    <div class="col-md-9">
+        <h3 class="center-text">Sorry, You don't have the permission to access this page</h3>
+    </div>
+</div>
+{% endblock %}
