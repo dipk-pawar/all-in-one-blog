@@ -4,7 +4,7 @@ from blog_app.models import Category, Blog
 from django.utils.decorators import method_decorator
 from django.contrib.auth.decorators import login_required
 from django.views.generic.base import TemplateView
-from .forms import CategoryForm, BlogForm, UserRegistrationForm
+from .forms import CategoryForm, BlogForm, UserRegistrationForm, EditUserForm
 from django.contrib import messages
 from django.template.defaultfilters import slugify
 import uuid
@@ -232,3 +232,49 @@ class GetandCreateDashboardUser(View):
         except Exception:
             messages.error(request, "Sorry, Something went wrong")
             return redirect("add_dashboard_user")
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(manager_or_admin_required, name="dispatch")
+class RetrieveandDeleteUser(View):
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(id=pk)
+            form = EditUserForm(instance=user)
+            return render(
+                request,
+                "dashboard/users/edit_dashboard_user.html",
+                {"form": form, "user": user},
+            )
+        except Exception:
+            messages.error(request, "Sorry, user not found")
+            return redirect("dashboard_users")
+
+    def post(self, request, pk):
+        try:
+            user = User.objects.get(id=pk)
+            form = EditUserForm(request.POST, instance=user)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "User updated successfully")
+                return redirect("dashboard_users")
+            else:
+                messages.error(request, "Sorry, something went wrong")
+                return redirect("dashboard_edit_user", pk=pk)
+        except Exception:
+            messages.error(request, "Sorry, Something went wrong")
+            return redirect("dashboard_edit_user", pk=pk)
+
+
+@method_decorator(login_required, name="dispatch")
+@method_decorator(editor_or_admin_required, name="dispatch")
+class DeleteDashboardUsers(View):
+    def get(self, request, pk):
+        try:
+            user = User.objects.get(id=pk)
+            user.delete()
+            messages.success(request, "User deleted successfully")
+            return redirect("dashboard_users")
+        except Exception:
+            messages.error(request, "Sorry, user not found")
+            return redirect("dashboard_users")
