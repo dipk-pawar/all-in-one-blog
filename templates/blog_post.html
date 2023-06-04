@@ -23,7 +23,42 @@
                 <!-- Post content-->
                 <section class="mb-5">
                     <p class="fs-5 mb-4">{{post.blog_body}}</p>
-                    </section>
+                    <!-- code for comments-->
+                    <h4>Comments ({{total_comments}})</h4><br>
+                    {% if comments %}
+                        {% for comment in comments %}
+                        <div class="card">
+                            <div class="card-cody">
+                                <p class="card-text mb-0">{{comment}}</p>
+                                <span>
+                                    <small>By {{comment.commented_by}}</small>
+                                    <small>| {{comment.created_at | timesince}} ago</small>
+                                </span>
+                            </div>
+                        </div><br>
+                        {% endfor %}
+                    {% else %}
+                    <p> No comments yet </p>
+                    {% endif %}
+                    <br>
+                    <div class="form-group">
+                        <form action="{% url 'post_by_slug' post.slug %}" method="POST">
+                            {% if messages %}
+                            {% for message in messages %}
+                            <div class="alert alert-{{message.tags}} alert-dismissible fade show" role="alert">
+                                <strong>{{ message }}</strong>.
+                            </div>
+                            {% endfor %}
+                            {% endif %}
+                            {% csrf_token %}
+                            <div class="form-group">
+                            <textarea name="comment" class="form-control" cols="30" rows="5" placeholder="Write your comment"></textarea>
+                            <input type="submit" value="submit" class="btn btn-primary mt-2">
+                            </div>
+                        </form>
+                    </div>
+                    <!-- end comment code -->
+                </section>
             </article>
         </div>
         <!-- Side widgets-->

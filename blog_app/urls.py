@@ -1,5 +1,9 @@
 from django.urls import path
-from blog_app.views import PostsByCategory, GetPostBySlug, SearchCategory
+from blog_app.views import (
+    PostsByCategory,
+    GetPostBySlug,
+    SearchCategory,
+)
 
 urlpatterns = [
     path("<int:id>", PostsByCategory.as_view(), name="post_by_category"),
